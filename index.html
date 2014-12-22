@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="bower_components/chartist/dist/chartist.min.css">
+    <script src="bower_components/chartist/dist/chartist.min.js"></script>
+
+     <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4J2uxDYsww7CmC2QsT5tTEP-ZI3Iu25o">
+    </script>
+    <script type="text/javascript" src="js/countUp.js"></script>
+    <script type="text/javascript">
+
+    function initialize() {
+  	var mapOptions = {
+   zoom: 14,
+    center: new google.maps.LatLng(-29.987207, 116.569219)
+  }
+  var map = new google.maps.Map(document.getElementById('map-canvas-high'),
+                                mapOptions);
+
+  var myLatLng = new google.maps.LatLng(-29.987207, 116.569219);
+  var beachMarker = new google.maps.Marker({
+      position: myLatLng,
+      map: map,
+      icon: image
+  });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+// This example displays a marker at the center of Australia.
+// When the user clicks the marker, an info window opens.
+
+function initialize2() {
+  var mapOptions = {
+   zoom: 10,
+    center: new google.maps.LatLng(-31.651261, 116.662908)
+  }
+  var map = new google.maps.Map(document.getElementById('map-canvas-low'),
+                                mapOptions);
+
+  var myLatLng = new google.maps.LatLng(-31.651261, 116.662908);
+  var beachMarker = new google.maps.Marker({
+      position: myLatLng,
+      map: map,
+      icon: image
+  });
+}
+
+
+
+google.maps.event.addDomListener(window, 'load', initialize2);
+
+</script>
+  </head>
+
+<body>
+
+
+<div class="row text-center">
+
+<div class="medium-12 columns">
+	<h3>Schools' Weather Wall</h3>
+
+</div>
+
+
+
+<div class="medium-6 columns">
+
+	<h3>Reports submitted</h3>
+	<h1 id="reports">0</h1>
+</div>
+
+<div class="medium-6 columns">
+	
+	<h3>Participation schools</h3>
+	<h1 id="schools">0</h1>
+</div>
+
+</div>
+
+<div class="medium-6 columns">
+
+	<div class="ct-chart-2 ct-perfect-section"></div>
+</div>
+
+</div>
+
+
+<div class="medium-6 columns">
+	<h3>Average Temp's</h3>
+	<div class="ct-chart ct-perfect-fourth"></div>
+	
+</div>
+
+<div class="medium-6 columns">
+	<h3>Highest temperature 49 &deg;C Buntine</h3>
+	<div id="map-canvas-high"></div>
+	<h3>Lowest temperature -1 &deg;C Northam</h3>
+	<div id="map-canvas-low"></div>
+	
+</div>
+
+
+<div class="medium-12 columns">
+	
+	<div class="ct-chart-1 ct-golden-section"></div>
+</div>
+
+<div class="medium-6 columns">
+	<div class="ct-chart-3 ct-golden-section"></div>
+</div>
+
+
+
+
+
+
+</body>
+
+
+<script type="text/javascript">
+var numAnim = new countUp("reports", 0, 467, 0, 30);
+numAnim.start();
+
+var numAnim2 = new countUp("schools", 0, 60, 0, 20);
+numAnim2.start();
+
+
+
+
+
+
+
+var chart = new Chartist.Line('.ct-chart', {
+  labels: ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+  series: [
+     [35, 34, 30, 25, 21, 20, 21, 22, 28, 29, 30],
+    [21, 20, 18, 14, 9, 8, 10, 10, 16, 18, 17],
+
+    
+
+  ]
+}, {
+  low: 0
+});
+
+// Let's put a sequence number aside so we can use it in the event callbacks
+var seq = 0,
+  delays = 80,
+  durations = 500;
+
+// Once the chart is fully created we reset the sequence
+chart.on('created', function() {
+  seq = 0;
+});
+
+// On each drawn element by Chartist we use the Chartist.Svg API to trigger SMIL animations
+chart.on('draw', function(data) {
+  seq++;
+
+  if(data.type === 'line') {
+    // If the drawn element is a line we do a simple opacity fade in. This could also be achieved using CSS3 animations.
+    data.element.animate({
+      opacity: {
+        // The delay when we like to start the animation
+        begin: seq * delays + 1000,
+        // Duration of the animation
+        dur: durations,
+        // The value where the animation should start
+        from: 0,
+        // The value where it should end
+        to: 1
+      }
+    });
+  } else if(data.type === 'label' && data.axis === 'x') {
+    data.element.animate({
+      y: {
+        begin: seq * delays,
+        dur: durations,
+        from: data.y + 100,
+        to: data.y,
+        // We can specify an easing function from Chartist.Svg.Easing
+        easing: 'easeOutQuart'
+      }
+    });
+  } else if(data.type === 'label' && data.axis === 'y') {
+    data.element.animate({
+      x: {
+        begin: seq * delays,
+        dur: durations,
+        from: data.x - 100,
+        to: data.x,
+        easing: 'easeOutQuart'
+      }
+    });
+  } else if(data.type === 'point') {
+    data.element.animate({
+      x1: {
+        begin: seq * delays,
+        dur: durations,
+        from: data.x - 10,
+        to: data.x,
+        easing: 'easeOutQuart'
+      },
+      x2: {
+        begin: seq * delays,
+        dur: durations,
+        from: data.x - 10,
+        to: data.x,
+        easing: 'easeOutQuart'
+      },
+      opacity: {
+        begin: seq * delays,
+        dur: durations,
+        from: 0,
+        to: 1,
+        easing: 'easeOutQuart'
+      }
+    });
+  } else if(data.type === 'grid') {
+    // Using data.axis we get x or y which we can use to construct our animation definition objects
+    var pos1Animation = {
+      begin: seq * delays,
+      dur: durations,
+      from: data[data.axis + '1'] - 30,
+      to: data[data.axis + '1'],
+      easing: 'easeOutQuart'
+    };
+
+    var pos2Animation = {
+      begin: seq * delays,
+      dur: durations,
+      from: data[data.axis + '2'] - 100,
+      to: data[data.axis + '2'],
+      easing: 'easeOutQuart'
+    };
+
+    var animations = {};
+    animations[data.axis + '1'] = pos1Animation;
+    animations[data.axis + '2'] = pos2Animation;
+    animations['opacity'] = {
+      begin: seq * delays,
+      dur: durations,
+      from: 0,
+      to: 1,
+      easing: 'easeOutQuart'
+    };
+
+    data.element.animate(animations);
+  }
+});
+
+
+
+
+</script>
+
+<script type="text/javascript">
+new Chartist.Line('.ct-chart-1', {
+  labels: ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+  series: [
+    {
+      name: 'Fibonacci sequence',
+      data: [44, 49, 43, 40, 33, 32, 35, 39, 40, 43, 43]
+    },
+    {
+      name: 'Golden section',
+      data: [4, 10, 7, 5, 2, 1, -1, 2, 6, 6, 5]
+    }
+  ]
+});
+
+var easeOutQuad = function (x, t, b, c, d) {
+  return -c * (t /= d) * (t - 2) + b;
+};
+
+var $chart = $('.ct-chart-1');
+
+var $toolTip = $chart
+  .append('<div class="tooltip"></div>')
+  .find('.tooltip');
+
+
+$chart.on('mouseenter', '.ct-point', function() {
+  var $point = $(this),
+    value = $point.attr('ct:value'),
+    seriesName = $point.parent().attr('ct:series-name');
+
+  $point.animate({'stroke-width': '50px'}, 300, easeOutQuad);
+  $toolTip.html(seriesName + '<br>' + value).show();
+});
+
+$chart.on('mouseleave', '.ct-point', function() {
+  var $point = $(this);
+
+  $point.animate({'stroke-width': '20px'}, 300, easeOutQuad);
+  $toolTip.hide();
+});
+
+$chart.on('mousemove', function(event) {
+  $toolTip.css({
+    left: (event.offsetX || event.originalEvent.layerX) - $toolTip.width() / 2 - 10,
+    top: (event.offsetY || event.originalEvent.layerY) - $toolTip.height() - 40
+  });
+});
+
+
+</script>
+
+
+
+<script type="text/javascript">
+
+    // set countUp options
+    // you don't need to do this - you can use the default options
+    var options = {
+        useEasing : true, // toggle easing
+        useGrouping : true, // 1,000,000 vs 1000000
+        separator : ',', // character to use as a separator
+        decimal : '.', // character to use as a decimal
+    }
+    var useOnComplete = false;
+    var useEasing = true;
+    var useGrouping = true;
+
+    var demo, code, data, stars;
+
+    // create instance
+    window.onload = function() {
+        // setup countUp object 
+        demo = new countUp('myTargetElement', 0, 94.62, 2, 2.5, options);
+        // you could do demo.start() right here but we are getting actual current star count from github api below
+        // since it is an asynchronous call, we fire start() in the success fn of the XMLHttpRequest object
+        getStars.send();
+
+        // display version (no hassling with markup!)
+        document.getElementById('version').innerHTML = 'v'+demo.version();
+    }
+
+    // for demo:
+    function swapValues() {
+        var oldStartVal = document.getElementById("startVal").value;
+        var oldEndVal = document.getElementById("endVal").value;
+        document.getElementById("startVal").value = oldEndVal;
+        document.getElementById("endVal").value = oldStartVal;
+        updateCodeVisualizer();
+    }
+    function createCountUp() {
+
+        var startVal = document.getElementById("startVal").value;
+        startVal = Number(startVal.replace(',','').replace(' ',''));
+        var endVal = document.getElementById("endVal").value;
+        endVal = Number(endVal.replace(',','').replace(' ',''));
+        var decimals = document.getElementById("decimals").value;
+        var duration = document.getElementById("duration").value;
+        var prefix = document.getElementById("prefix").value;
+        var suffix = document.getElementById("suffix").value;
+
+        options = {
+            useEasing : useEasing,
+            useGrouping : useGrouping,
+            separator : document.getElementById("separator").value,
+            decimal : document.getElementById("decimal").value,
+            prefix: prefix,
+            suffix: suffix
+        }
+
+        // you don't have to create a new instance of countUp every time you start an animation,
+        // you can just change the properties individually. But I do here in case user changes values in demo.
+        demo = new countUp("myTargetElement", startVal, endVal, decimals, duration, options);
+
+        if (useOnComplete) {
+            demo.start(methodToCallOnComplete);
+        } else {
+            demo.start();
+        }
+
+        updateCodeVisualizer();
+    }
+    function showCodeAndStop() {
+        code = 'demo.stop();';
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+        demo.stop();
+    }
+    function showCodeAndReset() {
+        code = 'demo.reset();';
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+        demo.reset();
+    }
+    function showCodeAndResume() {
+        code = 'demo.resume();';
+        document.getElementById("codeVisualizer").innerHTML = code;
+
+        demo.resume();
+    }
+    function toggleOnComplete(checkbox) {
+
+        if (checkbox.checked) {
+            useOnComplete = true;
+        } else {
+            useOnComplete = false;
+        }
+        updateCodeVisualizer();
+    }
+    function toggleEasing(checkbox) {
+
+        if (checkbox.checked) {
+            useEasing = true;
+        } else {
+            useEasing = false;
+        }
+        updateCodeVisualizer();
+    }
+    function toggleGrouping(checkbox) {
+
+        if (checkbox.checked) {
+            useGrouping = true;
+        } else {
+            useGrouping = false;
+        }
+        updateCodeVisualizer();
+    }
+    function methodToCallOnComplete() {
+        console.log('COMPLETE!');
+        alert('COMPLETE!');
+    }
+    function updateCodeVisualizer() {
+        var startVal = document.getElementById("startVal").value;
+        startVal = Number(startVal.replace(',','').replace(' ',''));
+        var endVal = document.getElementById("endVal").value;
+        endVal = Number(endVal.replace(',','').replace(' ',''));
+        var decimals = document.getElementById("decimals").value;
+        var duration = document.getElementById("duration").value;
+        var separator = document.getElementById("separator").value;
+        var decimal = document.getElementById("decimal").value;
+        var prefix = document.getElementById("prefix").value;
+        var suffix = document.getElementById("suffix").value;
+
+
+        var code = 'var options = {<br>';
+        code += (useEasing) ? '&emsp;&emsp;useEasing : true, <br>' : '&emsp;&emsp;useEasing : false, <br>';
+        code += (useGrouping) ? '&emsp;&emsp;useGrouping : true, <br>' : '&emsp;&emsp;useGrouping : false, <br>';
+        code += '&emsp;&emsp;separator : \''+separator+'\', <br>';
+        code += '&emsp;&emsp;decimal : \''+decimal+'\' <br>';
+        code += '&emsp;&emsp;prefix : \''+prefix+'\' <br>';
+        code += '&emsp;&emsp;suffix : \''+suffix+'\' <br>';
+        code += '}<br>';
+        code += 'var demo = new countUp("myTargetElement", '+startVal+', '+endVal+', '+decimals+', '+duration+', options);<br>';
+        if (useOnComplete) {
+            code += 'demo.start(methodToCallOnComplete);';
+        } else {
+            code += 'demo.start();';
+        }
+        document.getElementById("codeVisualizer").innerHTML = code;
+    }
+
+    // get current star count
+    var repoInfoUrl = 'https://api.github.com/repos/inorganik/countUp.js';
+    var getStars = new XMLHttpRequest();
+    getStars.open('GET', repoInfoUrl, true);
+    getStars.timeout = 5000;
+
+    getStars.onreadystatechange = function() {
+        // 2: received headers,  3: loading, 4: done
+        if (getStars.readyState == 4) {
+            if (getStars.status == 200) {
+                if (getStars.responseText !== 'undefined') {
+                    if (getStars.responseText.length > 0) {
+                        data = JSON.parse(getStars.responseText);
+                        stars = data.stargazers_count;
+                        // change input values
+                        document.getElementById("startVal").value = 0;
+                        document.getElementById("endVal").value = stars;
+                        document.getElementById("decimals").value = 0;
+                        // change code example values
+                        updateCodeVisualizer();
+                        // change the startVal and endVal properties of the demo countUp and run it
+                        demo.startVal = 0;
+                        demo.endVal = stars;
+                        demo.decimals = 0;
+                        demo.start();
+                    }
+                }
+            }
+        }
+    }
+    getStars.onerror = function() {
+        console.log('error: '+getStars.status)
+        demo.start();
+    }
+
+    </script>
+
+</html>
